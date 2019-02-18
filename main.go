@@ -94,6 +94,11 @@ func compressDirectory(path string, output string, key string) {
 }
 
 func compressFile(input os.File, output string, key string) {
+	name := strings.Split(input.Name(), "/")[len(strings.Split(input.Name(), "/"))-1]
+	if strings.HasPrefix(name, ".") {
+		return
+	}
+
 	if !(strings.HasSuffix(input.Name(), ".png") || strings.HasSuffix(input.Name(), ".jpg") || strings.HasSuffix(input.Name(), ".jpeg")) {
 		log.Fatal("Supported file types: png, jpg, jpeg")
 	}
@@ -103,7 +108,6 @@ func compressFile(input os.File, output string, key string) {
 	if err == nil && tinify.IsDirectory(o) {
 		output = output + "/tiny-" + strings.Split(input.Name(), "/")[len(strings.Split(input.Name(), "/"))-1]
 	} else {
-		name := strings.Split(input.Name(), "/")[len(strings.Split(input.Name(), "/"))-1]
 		output = strings.Replace(output, name, "tiny-"+name, 1)
 	}
 
