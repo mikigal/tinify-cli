@@ -19,14 +19,19 @@ func Upload(key string, file *os.File) (Response, error) {
 		return Response{}, err
 	}
 
+	defer resp.Body.Close()
+
 	if resp.StatusCode == http.StatusTooManyRequests {
 		return Response{}, TooManyRequests
 	}
 	if resp.StatusCode == http.StatusUnauthorized {
 		return Response{}, Unauthorized
 	}
+	if resp.StatusCode == http.StatusUnsupportedMediaType {
+		return Response{}, UnsupportedMediaType
+	}
 	if resp.StatusCode != http.StatusCreated {
-		return Response{}, errors.New(fmt.Sprintf("Unknown error. HTTP status code: %d", resp.StatusCode))
+		return Response{}, errors.New(fmt.Sprintf("Unknown upload error. HTTP status code: %d. Please report it on GitHub or by mail (mikigal.priv@gmail.com). \nDebug info: %v", resp.StatusCode, resp))
 	}
 
 	bytes, err := ioutil.ReadAll(resp.Body)
@@ -49,15 +54,15 @@ func Upload(key string, file *os.File) (Response, error) {
 	ratio, _ := output.GetFloat64("ratio")
 	url, _ := output.GetString("url")
 
-	return Response {
+	return Response{
 		InputSize: inputSize,
 		InputType: inputType,
 
-		Size: size,
-		Type: typee,
-		Width: width,
+		Size:   size,
+		Type:   typee,
+		Width:  width,
 		Height: height,
-		Ratio: ratio,
-		Url: url,
+		Ratio:  ratio,
+		Url:    url,
 	}, err
 }

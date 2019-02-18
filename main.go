@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
-
 func main() {
-	args := make([]string, len(os.Args) - 1)
+	args := make([]string, len(os.Args)-1)
 	for i := 0; i < len(args); i++ {
-		args[i] = os.Args[i + 1]
+		args[i] = os.Args[i+1]
 	}
 
 	if len(args) == 0 {
@@ -33,7 +33,7 @@ func main() {
 	fmt.Println()
 
 	if len(args) == 1 {
-		doStuff(args[0], "tiny-" + args[0], key)
+		doStuff(args[0], "tiny-"+args[0], key)
 		return
 	}
 	if len(args) == 2 {
@@ -65,6 +65,10 @@ func setKey(args []string) {
 }
 
 func doStuff(target string, name string, key string) {
+	if !(strings.HasSuffix(target, ".png") || strings.HasSuffix(target, ".jpg") || strings.HasSuffix(target, ".jpeg")) {
+		log.Fatal("Supported file types: png, jpg, jpeg")
+	}
+
 	file, err := os.Open(target)
 	if err != nil {
 		log.Fatal("Selected file does not exists!")
@@ -73,6 +77,6 @@ func doStuff(target string, name string, key string) {
 	res, err := tinify.Upload(key, file)
 	tinify.Check(err)
 
-	res.Download(name)
-	fmt.Printf("Panda save you just %d%% (%d KB)!", res.CalcPercent(), res.CalcSizeKB())
+	res.Download(name, key)
+	fmt.Printf("Panda just saved you %d%% (%d KB)!", res.CalcPercent(), res.CalcSizeKB())
 }

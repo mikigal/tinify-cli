@@ -8,8 +8,9 @@ import (
 	"strings"
 )
 
-var TooManyRequests = errors.New("you exceeded your monthly limit")
-var Unauthorized = errors.New("your API KEY is invalid")
+var TooManyRequests = errors.New("You exceeded your monthly limit")
+var Unauthorized = errors.New("Your API KEY is invalid")
+var UnsupportedMediaType = errors.New("Invalid file. Supported file types: png, jpg, jpeg")
 
 func Check(err error) {
 	if err != nil {
@@ -25,7 +26,7 @@ func SaveKey(key string) error {
 		home += "/"
 	}
 
-	err = ioutil.WriteFile(home + ".tinify", []byte(key), 0644)
+	err = ioutil.WriteFile(home+".tinify", []byte(key), 0644)
 	return err
 }
 
