@@ -5,6 +5,8 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -45,4 +47,24 @@ func GetKey() (string, error) {
 
 	key := string(bytes)
 	return key, nil
+}
+
+func IsDirectory(path *os.File) bool {
+	mode, err := path.Stat()
+	if err != nil {
+		log.Fatal("Selected file does not exists!")
+	}
+
+	return mode.IsDir()
+}
+
+func GetFilesFromDir(root string) ([]string, error) {
+	var files []string
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, path)
+		}
+		return nil
+	})
+	return files, err
 }

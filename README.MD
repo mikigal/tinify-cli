@@ -10,10 +10,7 @@ Remember to set API KEY before first use! Get it on https://tinypng.com. You can
 
 ```bash
 tinify key <api key> # Only before first use
-tinify <input> [output]
+tinify <input> [output] # Input and output can be directory
 ```
-
-# TODO
-- Compress all files from directory
 
 ![img](https://i.imgur.com/8wSYDKW.png)
